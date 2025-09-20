@@ -1,0 +1,39 @@
+# === ARCHIVOS DE SISTEMA ===
+.DS_Store
+Thumbs.db
+
+# === IDEs ===
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# === JAVA ===
+*.class
+*.log
+*.war
+*.ear
+*.jar
+
+# === MAVEN ===
+target/
+dependency-reduced-pom.xml
+
+# === GRADLE ===
+.gradle/
+build/
+
+# === SERVERS ===
+# Tomcat, JBoss, Glassfish, Wildfly...
+logs/
+temp/
+work/

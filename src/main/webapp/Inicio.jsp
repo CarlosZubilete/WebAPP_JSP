@@ -12,9 +12,9 @@
 		<ul>
 			<li><a href=""> Inicio </a>
 			<li />
-			<li><a href="AgregarSeguros.jsp">Agregar Seguros</a>
+			<li><a href="ServletUsuario?param=1">Agregar Seguros</a>
 			<li />
-			<li><a href="ListarSeguros.jsp">Listar Seguros</a>
+			<li><a href="ServletUsuario?paramhome=1">Listar Seguros</a>
 			<li />
 		</ul>
 	</nav>

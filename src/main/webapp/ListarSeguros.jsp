@@ -15,7 +15,7 @@
 		<ul>
 			<li><a href="Inicio.jsp"> Inicio </a>
 			<li />
-			<li><a href="AgregarSeguros.jsp">Agregar Seguros</a>
+			<li><a href="ServletUsuario?param=1">Agregar Seguros</a>
 			<li />
 			<li><a href="">Listar Seguros</a>
 			<li />
@@ -25,22 +25,15 @@
 	<h1>"Tipo de seguro en la base de datos"</h1>
 
 	<%
-	ArrayList<Seguro> listSeguro = new ArrayList<Seguro>();
-	DaoSeguro daoSeguro = new DaoSeguro();
-
-	listSeguro = daoSeguro.findAll();
-
-	for (Seguro seguro : listSeguro) {
-		System.out.println("Id " + seguro.getId());
-		System.out.println("Description: " + seguro.getDescription());
-		System.out.println("Type" + seguro.getTypeSeguro().getDescription());
-		System.out.println("Contracting Cost: " + seguro.getContractingCost());
-		System.out.println("Unsurance Cost: " + seguro.getInsuranceCost());
-		System.out.println();
+	ArrayList<Seguro> listSeguro = null;
+	if (request.getAttribute("list") != null) {
+		DaoSeguro daoSeguro = new DaoSeguro();
+		listSeguro = daoSeguro.findAll();
 	}
 	%>
-	<%
 
+	<%
+	if (listSeguro != null) {
 	%>
 	<table border="1">
 		<tr>
@@ -65,7 +58,7 @@
 		%>
 	</table>
 	<%
-
+	}
 	%>
 
 </body>

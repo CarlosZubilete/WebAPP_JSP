@@ -26,47 +26,68 @@ public class ServletUsuario extends HttpServlet {
 
 	// @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	// response)
-
 	protected void doGet(HttpServletRequest req, HttpServletResponse res)
 	    throws ServletException, IOException {
 		// listening file "Home.jsp"
-		ArrayList<Seguro> list =  null;
+		ArrayList<Seguro> list = null;
 		DaoSeguro daoseguro = new DaoSeguro();
 		if (req.getParameter("paramhome") != null) {
-			
+
 			list = daoseguro.findAll();
 			System.out.println("Entre PARAMHOME");
 			req.setAttribute("list", list);
 			RequestDispatcher requestDispatcher2 = req.getRequestDispatcher("/ListarSeguros.jsp");
 			requestDispatcher2.forward(req, res);
 		}
-		
-		
+
 		ArrayList<TypeSeguro> listTypes = null;
 		DaoTypeSeguro daoType = new DaoTypeSeguro();
-		// 
-		if(req.getParameter("param") != null) {
-			listTypes = daoType.findAll(); 
+		//
+		if (req.getParameter("param") != null) {
+			listTypes = daoType.findAll();
 			System.out.println("Entre PARAM");
 			req.setAttribute("listTypes", listTypes);
 			RequestDispatcher requestDispatcher2 = req.getRequestDispatcher("/AgregarSeguros.jsp");
 			requestDispatcher2.forward(req, res);
-		
+
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
+	// @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	// response)
+
 	protected void doPost(HttpServletRequest req, HttpServletResponse res)
 	    throws ServletException, IOException {
 
-		if(req.getParameter("btnSend") != null) {
-			System.out.println("ENTRE POST");
+		ArrayList<TypeSeguro> listTypes = null;
+		DaoTypeSeguro daoType = new DaoTypeSeguro();
+
+		if (req.getParameter("btnSend") != null) {
 			// todo: create a functions in daoSeguro.
+			String description = req.getParameter("description");
+			int typeSeguro = Integer.parseInt(req.getParameter("typeSeguro"));
+			double contratringCost = Double.parseDouble(req.getParameter("contratringCost"));
+			double maxInsuredCost = Double.parseDouble(req.getParameter("maxInsuredCost"));
+			System.out.println("ENTRE POST");
+
+			if (typeSeguro == -1) {
+				String error = "La descripción es obligatoria";
+				req.setAttribute("error", error);
+				// We have to send the collection typesSeguro...
+				listTypes = daoType.findAll();
+				req.setAttribute("listTypes", listTypes);
+				req.getRequestDispatcher("/AgregarSeguros.jsp").forward(req, res);
+				return;
+			}
+
+			// ADD TO THE DATABASE..
+			System.out.println("Description: " + description);
+			System.out.println("Tipo Seguro: " + typeSeguro);
+			System.out.println("contractingCost " + contratringCost);
+			System.out.println("maxInsuredCost " + maxInsuredCost);
+
 		}
-	
+
 	}
 
 }

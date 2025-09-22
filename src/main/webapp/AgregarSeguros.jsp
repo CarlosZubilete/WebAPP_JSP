@@ -25,6 +25,7 @@
 	</nav>
 
 	<%
+	DaoSeguro daoSeguro = new DaoSeguro();
 	ArrayList<TypeSeguro> listTypes = null;
 	DaoTypeSeguro daotype = new DaoTypeSeguro();
 
@@ -36,14 +37,14 @@
 
 	<form action="ServletUsuario" method="post">
 		<div class="formulario_field">
-			<label>Id Seguro:</label> <label>FROM DATA BASE</label>
+			<label>Id Seguro:</label> <label><b><%=daoSeguro.nextId()%></b></label>
 		</div>
 		<div class="formulario_field">
 			<label for="description">Descripción:</label> <input type="text"
-				name="description" />
+				name="description" required />
 		</div>
-
-		<select>
+		<select name="typeSeguro" id="typeSeguro">
+			<option value="-1">-- Seleccionar --</option>
 			<%
 			if (listTypes != null) {
 				for (TypeSeguro type : listTypes) {
@@ -51,7 +52,6 @@
 			<option value="<%=type.getId()%>">
 				<%=type.getDescription()%>
 			</option>
-
 			<%
 			}
 			}
@@ -59,13 +59,18 @@
 		</select>
 		<div class="formulario_field">
 			<label for="contratringCost">Consto contratación:</label> <input
-				type="text" name="contratringCost" />
+				type="number" name="contratringCost" required min="1" />
 		</div>
 		<div class="formulario_field">
 			<label for="maxInsuredCost">Consto Máximo Asegurado:</label> <input
-				type="text" name="description" />
+				type="number" name="maxInsuredCost" required min="1" />
 		</div>
-		<input type="submit" value="Enviar" name="btnSend"/>
+		<input type="submit" value="Enviar" name="btnSend" />
 	</form>
+	
+	<% if(request.getAttribute("error") != null) { %>
+		
+		<p><%= request.getAttribute("error").toString()%></p>
+	<% } %>
 </body>
 </html>

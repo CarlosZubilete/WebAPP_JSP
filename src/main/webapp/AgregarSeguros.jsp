@@ -68,9 +68,9 @@
 		<input type="submit" value="Enviar" name="btnSend" />
 	</form>
 	
-	<% if(request.getAttribute("error") != null) { %>
+	<% if(request.getAttribute("message") != null) { %>
 		
-		<p><%= request.getAttribute("error").toString()%></p>
+		<p><%= request.getAttribute("message").toString()%></p>
 	<% } %>
 </body>
 </html>

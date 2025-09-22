@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -18,10 +19,38 @@ import entities.*;
 public class ServletUsuario extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private DaoTypeSeguro daoType = new DaoTypeSeguro();
+	private DaoSeguro daoSeguro = new DaoSeguro();
+
 	// @see HttpServlet#HttpServlet()
 	public ServletUsuario() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	// This function will get all type of Seguros...
+	private ArrayList<TypeSeguro> uploadTypeSeguro() {
+		ArrayList<TypeSeguro> listTypes = null;
+		DaoTypeSeguro daoType = new DaoTypeSeguro();
+		listTypes = daoType.findAll();
+		return listTypes;
+	}
+
+	private Boolean builtSeguroAndAdd(String description, int idType, double contratringCost,
+	    double maxInsuredCost) {
+		// Built...
+		TypeSeguro typeSeguro = new TypeSeguro();
+		Seguro seguro = new Seguro();
+		typeSeguro = daoType.findOne(idType);
+		seguro.setDescription(description);
+		seguro.setTypeSeguro(typeSeguro);
+		seguro.setContractingCost(new BigDecimal(contratringCost));
+		seguro.setInsuranceCost(new BigDecimal(maxInsuredCost));
+
+		System.out.println("BuiltSefuro: " + seguro);
+		System.out.println();
+		return daoSeguro.addOne(seguro);
+		
 	}
 
 	// @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -41,11 +70,11 @@ public class ServletUsuario extends HttpServlet {
 		}
 
 		ArrayList<TypeSeguro> listTypes = null;
-		DaoTypeSeguro daoType = new DaoTypeSeguro();
-		//
+
 		if (req.getParameter("param") != null) {
-			listTypes = daoType.findAll();
+			// listTypes = daoType.findAll();
 			System.out.println("Entre PARAM");
+			listTypes = this.uploadTypeSeguro();
 			req.setAttribute("listTypes", listTypes);
 			RequestDispatcher requestDispatcher2 = req.getRequestDispatcher("/AgregarSeguros.jsp");
 			requestDispatcher2.forward(req, res);
@@ -60,7 +89,6 @@ public class ServletUsuario extends HttpServlet {
 	    throws ServletException, IOException {
 
 		ArrayList<TypeSeguro> listTypes = null;
-		DaoTypeSeguro daoType = new DaoTypeSeguro();
 
 		if (req.getParameter("btnSend") != null) {
 			// todo: create a functions in daoSeguro.
@@ -71,21 +99,26 @@ public class ServletUsuario extends HttpServlet {
 			System.out.println("ENTRE POST");
 
 			if (typeSeguro == -1) {
-				String error = "La descripción es obligatoria";
-				req.setAttribute("error", error);
-				// We have to send the collection typesSeguro...
-				listTypes = daoType.findAll();
-				req.setAttribute("listTypes", listTypes);
-				req.getRequestDispatcher("/AgregarSeguros.jsp").forward(req, res);
-				return;
+				String message = "Error: La descripción es obligatoria";
+				req.setAttribute("message", message);
+			} else {
+				// ADD TO THE DATABASE..
+				Boolean isAdded = this.builtSeguroAndAdd(description, typeSeguro, contratringCost,
+				    maxInsuredCost);
+				String message = "";
+
+				if (isAdded)
+					message = "Se ha agrega con exito.";
+				else
+					message = "Erro: No se ah agregado con exito.";
+
+				req.setAttribute("message", message);
+
 			}
-
-			// ADD TO THE DATABASE..
-			System.out.println("Description: " + description);
-			System.out.println("Tipo Seguro: " + typeSeguro);
-			System.out.println("contractingCost " + contratringCost);
-			System.out.println("maxInsuredCost " + maxInsuredCost);
-
+			// We have to send the collection typesSeguro...
+			listTypes = this.uploadTypeSeguro();
+			req.setAttribute("listTypes", listTypes);
+			req.getRequestDispatcher("/AgregarSeguros.jsp").forward(req, res);
 		}
 
 	}

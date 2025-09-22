@@ -17,7 +17,27 @@ public class DaoSeguro {
 	 * "INSERT INTO usuario (nombre, apellido) VALUES ('" + user.getName() + "', '"
 	 * + user.getSurname() + "')"
 	 */
-	
+	public Boolean addOne(Seguro seguro) {
+		int rowCount = 0;
+		// Boolean resul = false;
+		String query = "Insert into seguros (descripcion, idTipo, costoContratacion,costoAsegurado) values('" + seguro.getDescription() + "' , '"
+		    + seguro.getTypeSeguro().getId() + "' , '" + seguro.getContractingCost() + "' , '"
+		    + seguro.getInsuranceCost() + "')";
+		System.out.println("DaoSeguro , query = " + query);
+		try (Connection conn = new Conexion().getConection()) {
+			Statement statement = conn.createStatement();
+			rowCount = statement.executeUpdate(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		if (rowCount == 1)
+			return true;
+		else
+			return false;
+
+	}
+
 	public int nextId() {
 		Integer nextId = null;
 		String query = "select count(*) as id from seguros;";
@@ -25,13 +45,13 @@ public class DaoSeguro {
 		try (Connection conn = new Conexion().getConection()) {
 			Statement statement = conn.createStatement();
 			ResultSet resultSet = statement.executeQuery(query);
-			if(resultSet.next()) {
+			if (resultSet.next()) {
 				nextId = resultSet.getInt("id");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return nextId + 1;
 
 	}
